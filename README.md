@@ -3,7 +3,7 @@
 # SanitizedStatistics
 
 
-<img src="https://github.com/StxGuy/NobleNeuron/blob/main/stat.png" width="256" height="256">
+<img src="https://github.com/StxGuy/NobleNeuron/blob/main/stat.svg" width="256" height="256">
 
 ## About
 
