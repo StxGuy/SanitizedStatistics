@@ -41,7 +41,7 @@ module SanitizedStatistics
     ! Welford's online algorithm
     ! xb = <x>
     ! s = var(x)
-    function Welford(x,xb,s)
+    subroutine Welford(x,xb,s)
         implicit none
         
             real,intent(in)     :: x(:)
