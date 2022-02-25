@@ -3,6 +3,11 @@ module SanitizedStatistics
     
     integer,parameter,private   :: dp = kind(1.d0)    
     
+    interface pcor
+        procedure   :: pcor1D
+        procedure   :: pcor2D
+    end interface
+    
     contains
     
     ! Normal distribution via
@@ -68,6 +73,81 @@ module SanitizedStatistics
         call random_number(r)
         x = mi + floor(r*(ma-mi+1))
     end function        
-      
+    
+    ! Pearson correlation coefficient between
+    ! two matrices
+    function pcor2D(X,Y) result(r)
+        implicit none
+        
+        real,intent(in) :: X(:,:),Y(:,:)
+        real            :: r
+        
+        real    :: x_av,y_av
+        real    :: xx,yy,xy
+        integer :: Nx,Ny,N, i,j
+        
+        Ny = size(X,1)
+        Nx = size(X,2)
+        N = Nx*Ny
+        
+        x_av = 0.0
+        y_av = 0.0
+        do j = 1,Nx
+        do i = 1,Ny
+            x_av = x_av + x(i,j)
+            y_av = y_av + y(i,j)
+        end do
+        end do
+        x_av = x_av/N
+        y_av = y_av/N
+        
+        xy = 0.0
+        xx = 0.0
+        yy = 0.0
+        do j = 1,Nx
+        do i = 1,Ny
+            xy = xy + x(i,j)*y(i,j)
+            xx = xx + x(i,j)*x(i,j)
+            yy = yy + y(i,j)*y(i,j)
+        end do
+        end do
+        
+        r = (xy - N*x_av*y_av)/sqrt((xx-N*x_av*x_av)*(yy-N*y_av*y_av))
+    end function
+    
+    ! Pearson correlation coefficient between
+    ! two vectors
+    function pcor1D(x,y) result(r)
+        implicit none
+        
+        real,intent(in) :: x(:),y(:)
+        real            :: r
+        
+        real    :: x_av,y_av
+        real    :: xx,yy,xy
+        integer :: N, i
+        
+        N = size(x,1)
+        
+        x_av = 0.0
+        y_av = 0.0
+        do i = 1,N
+            x_av = x_av + x(i)
+            y_av = y_av + y(i)
+        end do
+        x_av = x_av/N
+        y_av = y_av/N
+        
+        xy = 0.0
+        xx = 0.0
+        yy = 0.0
+        do i = 1,N
+            xy = xy + x(i)*y(i)
+            xx = xx + x(i)*x(i)
+            yy = yy + y(i)*y(i)
+        end do
+        
+        r = (xy - N*x_av*y_av)/sqrt((xx-N*x_av*x_av)*(yy-N*y_av*y_av))
+    end function
         
 end module
